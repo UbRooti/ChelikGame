@@ -946,13 +946,6 @@ sf::Vector2f getViewSize(sf::RenderWindow& window)
     }
 }
 
-sf::View createTextView(sf::RenderWindow& window)
-{
-    sf::View textView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
-    textView.setViewport(sf::FloatRect(0, 0, 1, 1));
-    return textView;
-}
-
 int main()
 {
     Map map;
