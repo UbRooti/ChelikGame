@@ -23,13 +23,14 @@ namespace VARS
     const int chunk_size = 20 * block_size_x;
     const int chunk_border_width = 2;
     const int reach_distance = 500;
+    const int max_view_distance = 2500;
 } // namespace VARS
 
 namespace CVARS
 {
     bool render_chunk_bg = true;
     bool debug = true;
-    bool default_view = false;
+    bool default_view = true;
 } // namespace CVARS
 
 class DebugScreenData
@@ -908,12 +909,48 @@ void draw_debug_screen(sf::RenderWindow& window)
     ss << "X (" << debugScreenData.getPlayerPosX() << ") , Y (" << debugScreenData.getPlayerPosY() << ")";
     ss << "\n";
 
-    ss << "Window view type: ";
-    ss << (CVARS::default_view ? "Default" : "Constant");
+    ss << "Window view type (F3 + W) : ";
+    ss << (CVARS::default_view ? "Default" : "Old");
     ss << "\n";
 
     sf::Vector2f pos = window.mapPixelToCoords(sf::Vector2i(10, 10));
     fontRenderer.draw_string(window, ss.str(), pos.x, pos.y);
+}
+
+sf::Vector2f getViewSize(sf::RenderWindow& window)
+{
+    if (CVARS::default_view)
+    {
+        if (window.getSize().x > window.getSize().y)
+        {
+            int width = VARS::max_view_distance;
+            int height = (float(window.getSize().y) / float(window.getSize().x)) * float(VARS::max_view_distance);
+
+            return sf::Vector2f(width, height);
+        }
+        else if (window.getSize().x < window.getSize().y)
+        {
+            int width = (float(window.getSize().x) / float(window.getSize().y)) * float(VARS::max_view_distance);
+            int height = VARS::max_view_distance;
+
+            return sf::Vector2f(width, height);
+        }
+        else
+        {
+            return sf::Vector2f(VARS::max_view_distance, VARS::max_view_distance);
+        }
+    }
+    else
+    {
+        return (sf::Vector2f) window.getSize();
+    }
+}
+
+sf::View createTextView(sf::RenderWindow& window)
+{
+    sf::View textView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
+    textView.setViewport(sf::FloatRect(0, 0, 1, 1));
+    return textView;
 }
 
 int main()
@@ -953,7 +990,7 @@ int main()
         }
 
         player.updateCollision(map);
-        window.setView(sf::View(player.get_center(), (sf::Vector2f) window.getSize()));
+        window.setView(sf::View(player.get_center(), getViewSize(window)));
 
         dt = clock.restart().asSeconds();
 
@@ -978,8 +1015,17 @@ int main()
         map.render(window);
         player.render(window);
 
+        // Text {
+
+        window.setView(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)));
+
+
         draw_debug_screen(window);
 
+
+        // } Text
+
+        window.setView(sf::View(player.get_center(), getViewSize(window)));
         window.display();
     }
 
