@@ -8,7 +8,7 @@ set(SRC_FILES
     src/GUI.cpp                 src/GUI.h
     src/Consts.cpp              src/Consts.h
     src/JSON.hpp
-    src/Globals.h
+    src/Globals.cpp               src/Globals.h
     src/ResourceManager.cpp     src/ResourceManager.h
     src/Game/Game.cpp           src/Game/Game.h
     src/Screens/Screen.h
