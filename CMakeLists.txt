@@ -4,15 +4,15 @@ project(ChelikGame)
 
 set(SRC_FILES
 
-    src/main.cpp
-    src/GUI.cpp                 src/GUI.h
-    src/Consts.cpp              src/Consts.h
     src/JSON.hpp
-    src/Globals.cpp               src/Globals.h
-    src/ResourceManager.cpp     src/ResourceManager.h
-    src/Game/Game.cpp           src/Game/Game.h
-    src/Screens/Screen.h
 
+    src/main.cpp
+    src/GUI.cpp                     src/GUI.h
+    src/Consts.cpp                  src/Consts.h
+    src/Globals.cpp                 src/Globals.h
+    src/ResourceManager.cpp         src/ResourceManager.h
+    src/Game/Game.cpp               src/Game/Game.h
+    src/Game/SoundsManager.cpp      src/Game/SoundsManager.cpp
 )
 
 

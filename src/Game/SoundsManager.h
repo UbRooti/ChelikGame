@@ -1,23 +1,10 @@
 #pragma once
 
+#include "../ResourceManager.h"
+#include <iostream>
+
 class SoundsManager
 {
-public:
-    static bool playSound(const std::string& soundName)
-    {
-        auto lSound = ResourceManager::getSound(soundName);
-
-        if (lSound == nullptr)
-        {
-            return false;
-        }
-
-        if (lSound->Playing == sf::SoundSource::Status::Playing)
-        {
-            lSound->stop();
-        }
-        lSound->play();
-
-        return true;
-    }
+public:;
+    static bool playSound(const std::string& soundName, float volume = 100.f);
 };

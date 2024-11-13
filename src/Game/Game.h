@@ -254,6 +254,8 @@ public:
 
     ~Game();
 
+    bool loadResources();
+
     void renderOverlay();
 
     void renderGame();

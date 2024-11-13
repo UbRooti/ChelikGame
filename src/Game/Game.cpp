@@ -836,6 +836,12 @@ Game::Game()
 
     md::map = map;
     md::player = player;
+
+    if (!loadResources())
+    {
+        std::cout << "Game::Game -> Failed to load resources!\n";
+        md::window->close();
+    }
 }
 
 Game::~Game()
@@ -849,6 +855,32 @@ Game::~Game()
     {
         md::map = nullptr;
     }
+}
+
+bool Game::loadResources()
+{
+
+    auto lDefaultNotification = ResourceManager::loadSound("DefaultNotification", "button.ogg");
+    if (lDefaultNotification == nullptr)
+    {
+        std::cout << "Failed to load 'DefaultNotification'\n";
+        return false;
+    }
+
+    auto lBackgroundMusic = ResourceManager::loadMusic("DefaultBackgroundMusic", "background.ogg");
+    if (lBackgroundMusic == nullptr)
+    {
+        std::cout << "Failed to load 'DefaultBackgroundMusic'\n";
+        return false;
+    }
+    else
+    {
+        lBackgroundMusic->setLoop(true);
+        lBackgroundMusic->setVolume(10.0f);
+        lBackgroundMusic->play();
+    }
+
+    return true;
 }
 
 void Game::renderOverlay()
@@ -895,6 +927,7 @@ void Game::proccessEvent(sf::Event& event)
     {
         if (event.key.code == sf::Keyboard::F3)
         {
+            SoundsManager::playSound("DefaultNotification", 25);
             CVARS::debug = !CVARS::debug;
         }
         else if (event.key.code == sf::Keyboard::W && sf::Keyboard::isKeyPressed(sf::Keyboard::F3))

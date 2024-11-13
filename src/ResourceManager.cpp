@@ -4,7 +4,7 @@ std::string ResourceManager::mResourcesPath;
 
 std::map<const std::string, std::shared_ptr<sf::Texture>> ResourceManager::mTexturesArray;
 std::map<const std::string, std::shared_ptr<sf::Music>> ResourceManager::mMusicArray;
-std::map<const std::string, std::shared_ptr<sf::Sound>> ResourceManager::mSoundArray;
+std::map<const std::string, std::pair<std::shared_ptr<sf::Sound>, std::shared_ptr<sf::SoundBuffer>>> ResourceManager::mSoundArray;
 
 void ResourceManager::unloadAllResources()
 {
@@ -111,16 +111,15 @@ std::shared_ptr<sf::Sound> ResourceManager::loadSound(const std::string& soundNa
 
     if (lBuffer.loadFromFile(mResourcesPath + soundPath))
     {
-        lSound = sf::Sound(lBuffer);
-
         auto result = mSoundArray.emplace(
-            std::pair<std::string, std::shared_ptr<sf::Sound>>
-                ( soundName, std::make_shared<sf::Sound>(lSound) )
+            std::pair<const std::string, std::pair<std::shared_ptr<sf::Sound>, std::shared_ptr<sf::SoundBuffer>>>
+                ( soundName, std::pair(std::make_shared<sf::Sound>(lSound), std::make_shared<sf::SoundBuffer>(lBuffer)) )
         );
 
         if (result.second)
         {
-            return result.first->second;
+            result.first->second.first->setBuffer(*result.first->second.second);
+            return result.first->second.first;
         }
     }
 
@@ -135,7 +134,7 @@ std::shared_ptr<sf::Sound> ResourceManager::getSound(const std::string& soundNam
 
     if (it != mSoundArray.end())
     {
-        return it->second;
+        return it->second.first;
     }
     
     std::cout << "ResourceManager::getSound -> Failed to get sound with name '" << soundName << "'\n";

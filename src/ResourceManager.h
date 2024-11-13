@@ -12,7 +12,7 @@ class ResourceManager
 
     static std::map<const std::string, std::shared_ptr<sf::Texture>> mTexturesArray;
     static std::map<const std::string, std::shared_ptr<sf::Music>> mMusicArray;
-    static std::map<const std::string, std::shared_ptr<sf::Sound>> mSoundArray;
+    static std::map<const std::string, std::pair<std::shared_ptr<sf::Sound>, std::shared_ptr<sf::SoundBuffer>>> mSoundArray;
 public:
     static void unloadAllResources();
     static void setResourcesPath(const std::string& path);

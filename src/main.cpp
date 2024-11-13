@@ -19,17 +19,6 @@ int main()
     
     md::fontRenderer = std::make_shared<FontRenderer>(VARS::res_path);
 
-    auto lBackgroundMusic = ResourceManager::loadMusic("DefaultBackgroundMusic", "background.ogg");
-    if (lBackgroundMusic == nullptr)
-    {
-        std::cout << "Failed to load 'DefaultBackgroundMusic'\n";
-        md::window->close();
-    }
-
-    lBackgroundMusic->setLoop(true);
-    lBackgroundMusic->setVolume(10.0f);
-    lBackgroundMusic->play();
-
     Game gm;
 
     while (md::window->isOpen())
