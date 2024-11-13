@@ -1,4 +1,10 @@
 #!/bin/sh
-g++ -o bin/main src/main.cpp src/json.hpp -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio
-cd bin/
+mkdir -p bin
+mkdir -p build
+cd build
+cmake ..
+cmake --build .
+cp bin/main ../bin/
+cd ../bin/
+chmod +x main
 ./main
