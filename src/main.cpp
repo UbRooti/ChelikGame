@@ -23,7 +23,7 @@ int main()
 {
     ResourceManager::setResourcesPath(VARS::res_path);
 
-    md::window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1280, 720), "Freaktoria");
+    md::window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1280, 720), "ChelikGame");
     md::window->setFramerateLimit(60);
     
     md::fontRenderer = std::make_shared<FontRenderer>(VARS::res_path);
