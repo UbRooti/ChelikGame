@@ -11,7 +11,7 @@
 
 ```bash
 sudo apt update
-sudo apt install build-essential git cmake 
+sudo apt install build-essential git cmake libsfml-dev
 ```
 
 Then:
