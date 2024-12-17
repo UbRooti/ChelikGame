@@ -10,6 +10,9 @@
 #include "Game/Game.h"
 
 
+// test commit add comment
+
+
 int main()
 {
     ResourceManager::setResourcesPath(VARS::res_path);
