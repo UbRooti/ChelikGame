@@ -1,3 +1,6 @@
 .vscode
 bin/main
 build/
+cmake-build-debug/
+.cache/
+.idea/
