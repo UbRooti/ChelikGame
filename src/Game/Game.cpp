@@ -293,7 +293,6 @@ Map::Map(const std::string& file)
 {
     mChunkBG.setFillColor(sf::Color::Green);
     mChunkBG.setTexture(ResourceManager::getTexture("BackgroundGrass").get());
-    std::cout << (ResourceManager::getTexture("BackgroundGrass").get() == nullptr ? "Null texture grass" : "Correct texture grass") << std::endl;
 }
 
 Map::~Map()
