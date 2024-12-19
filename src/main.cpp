@@ -22,7 +22,7 @@ int main()
     
     md::fontRenderer = std::make_shared<FontRenderer>(VARS::res_path);
 
-    Game gm;
+    std::shared_ptr<Game> gm = std::make_shared<Game>();
 
     while (md::window->isOpen())
     {
@@ -30,20 +30,20 @@ int main()
         while (md::window->pollEvent(event))
         {
             if (event.type == sf::Event::Closed) md::window->close();
-            else gm.proccessEvent(event);
+            else gm->proccessEvent(event);
         }
 
-        gm.preRender();
+        gm->preRender();
         
-        md::window->setView(sf::View(gm.getRenderCenter(), getViewSize(*md::window)));
+        md::window->setView(sf::View(gm->getRenderCenter(), getViewSize(*md::window)));
         
-        gm.renderGame();
+        gm->renderGame();
 
         md::window->setView(sf::View(sf::FloatRect(0, 0, md::window->getSize().x, md::window->getSize().y)));
 
-        gm.renderOverlay();
+        gm->renderOverlay();
 
-        md::window->setView(sf::View(gm.getRenderCenter(), getViewSize(*md::window)));
+        md::window->setView(sf::View(gm->getRenderCenter(), getViewSize(*md::window)));
 
         md::window->display();
     }

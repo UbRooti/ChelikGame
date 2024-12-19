@@ -57,90 +57,13 @@ const char* get_tex_path(const TEXTURE_ID& id)
     }
 }
 
-TextureManager::TextureManager(const std::string& path)
-{
-    init_textures(path);
-}
-
-TextureManager::~TextureManager()
-{
-    for (std::pair<TEXTURE_ID, sf::Texture*> p : resources)
-    {
-        delete p.second;
-    }
-
-    resources.clear();
-}
-
-sf::Texture* TextureManager::get(const TEXTURE_ID& id)
-{
-    for (std::pair<TEXTURE_ID, sf::Texture*> p : resources)
-    {
-        if (p.first == id)
-        {
-            return p.second;
-        }
-    }
-
-    return 0;
-}
-
-bool TextureManager::contains(const TEXTURE_ID& id)
-{
-    return resources.find(id) != resources.end();
-}
-
-void TextureManager::init_textures(const std::string& path)
-{
-    sf::Texture* texture = new sf::Texture;
-    std::string tex_path = path + get_tex_path(TEXTURE_ID::GRASS_BG);
-    if (texture->loadFromFile(tex_path))
-    {
-        resources.insert(std::pair<TEXTURE_ID, sf::Texture*> { TEXTURE_ID::GRASS_BG, texture });
-        std::cout << "Loaded texture: " << tex_path << "\n";
-    }
-    else
-    {
-        std::cerr << "Can't find: " << tex_path << "\n";
-    }
-
-    texture = new sf::Texture;
-    tex_path = path + get_tex_path(TEXTURE_ID::PLAYER_IMG);
-    if (texture->loadFromFile(tex_path))
-    {
-        resources.insert(std::pair<TEXTURE_ID, sf::Texture*> { TEXTURE_ID::PLAYER_IMG, texture });
-        std::cout << "Loaded texture: " << tex_path << "\n";
-    }
-    else
-    {
-        std::cerr << "Can't find: " << tex_path << "\n";
-    }
-}
-
-TextureManager textureManager(VARS::res_path);
-
-const sf::Vector2f& BlockInfo::get_size() const
-{
-    return this->rect.getSize();
-}
-
-const sf::Vector2f& BlockInfo::get_pos() const
-{
-    return this->rect.getPosition();
-}
-
-BLOCK_ID BlockInfo::get_id()
-{
-    return this->block_id;
-}
-
 const sf::Color get_color(BLOCK_ID id)
 {
     if (id == BLOCK_ID::AIR) return sf::Color(255, 255, 255, 0);
     else if (id == BLOCK_ID::DIRT_BLOCK) return sf::Color(122, 38, 38, 255);
     else if (id == BLOCK_ID::GRASS_BLOCK) return sf::Color(0, 255, 0, 255);
     else if (id == BLOCK_ID::STONE_BLOCK) return sf::Color(50, 50, 50, 255);
-    
+
     return sf::Color(255, 255, 255, 255);
 }
 
@@ -188,7 +111,7 @@ Block Block::deserialize(const nlohmann::json& json)
 
     obj.rect.setPosition(sf::Vector2f(json["rect"]["posX"], json["rect"]["posY"]));
     obj.rect.setSize(sf::Vector2f(json["rect"]["sizeX"], json["rect", "sizeY"]));
-    
+
     obj.correct = true;
     obj.rect.setFillColor(sf::Color(json["rect"]["color"]));
 
@@ -273,7 +196,7 @@ bool Chunk::add_block(const sf::Vector2f& pos, BLOCK_ID id)
         {
             return true;
         }
-        
+
         Block* obj = new Block(sf::RectangleShape(sf::Vector2f(VARS::block_size_x, VARS::block_size_y)), id, pos);
         objects.push_back(obj);
         return true;
@@ -289,7 +212,7 @@ bool Chunk::add_block(const sf::Vector2f& pos, BLOCK_ID id, const sf::Vector2f& 
         {
             return true;
         }
-        
+
         Block* obj = new Block(sf::RectangleShape(size), id, pos);
         objects.push_back(obj);
         return true;
@@ -318,7 +241,7 @@ nlohmann::json Chunk::serialize(const Chunk& obj)
 {
     nlohmann::json json;
 
-    
+
 
     return json;
 }
@@ -327,7 +250,7 @@ Chunk Chunk::deserialize(const nlohmann::json& json)
 {
     Chunk obj;
 
-    
+
 
     return obj;
 }
@@ -349,7 +272,7 @@ void Chunk::render(sf::RenderWindow& window)
         shape.setFillColor(sf::Color::White);
 
         window.draw(shape);
-        
+
         shape.setPosition(pos_x, pos_y + VARS::chunk_size - VARS::chunk_border_width);
 
         window.draw(shape);
@@ -369,7 +292,8 @@ Map::Map(const std::string& file)
 : mSaveFile(file), mChunks(), mChunkBG(sf::Vector2f(VARS::chunk_size, VARS::chunk_size))
 {
     mChunkBG.setFillColor(sf::Color::Green);
-    mChunkBG.setTexture(textureManager.get(TEXTURE_ID::GRASS_BG));
+    mChunkBG.setTexture(ResourceManager::getTexture("BackgroundGrass").get());
+    std::cout << (ResourceManager::getTexture("BackgroundGrass").get() == nullptr ? "Null texture grass" : "Correct texture grass") << std::endl;
 }
 
 Map::~Map()
@@ -489,7 +413,7 @@ void Map::renderVisibleChunks(sf::RenderWindow& window)
     int maxChunkX = static_cast<int>(visibleArea.left + visibleArea.width) - (static_cast<int>(visibleArea.left + visibleArea.width) % VARS::chunk_size);
     int minChunkY = static_cast<int>(visibleArea.top) - (static_cast<int>(visibleArea.top) % VARS::chunk_size);
     int maxChunkY = static_cast<int>(visibleArea.top + visibleArea.height) - (static_cast<int>(visibleArea.top + visibleArea.height) % VARS::chunk_size);
-    
+
     for (int x = minChunkX; x <= maxChunkX; x += VARS::chunk_size)
     {
         for (int y = minChunkY; y <= maxChunkY; y += VARS::chunk_size)
@@ -527,7 +451,7 @@ Player::Player()
 
     mImage.setFillColor(sf::Color::White);
     mImage.setPosition(VARS::max_size_x / 2, VARS::max_size_y / 2);
-    mImage.setTexture(textureManager.get(TEXTURE_ID::PLAYER_IMG));
+    mImage.setTexture(ResourceManager::getTexture("Player").get());
 
     mClock.restart();
     mLastBlockUse.restart();
@@ -665,7 +589,7 @@ void Player::render(sf::RenderWindow& window)
         shape.setFillColor(sf::Color::Red);
 
         window.draw(shape);
-        
+
         shape.setPosition(mRect.getPosition().x, mRect.getPosition().y + mRect.getSize().y - bWidth);
 
         window.draw(shape);
@@ -700,7 +624,7 @@ void Player::useBlock(const sf::Mouse::Button& mouseButton)
 
     int posX = worldPos.x - (static_cast<int>(worldPos.x) % VARS::block_size_x);
     int posY = worldPos.y - (static_cast<int>(worldPos.y) % VARS::block_size_y);
-    
+
     if (mouseButton == sf::Mouse::Right)
     {
         if (
@@ -728,7 +652,7 @@ void Player::event(sf::Event& event, sf::RenderWindow& window, Map& map)
 
         int posX = worldPos.x - (static_cast<int>(worldPos.x) % VARS::block_size_x);
         int posY = worldPos.y - (static_cast<int>(worldPos.y) % VARS::block_size_y);
-        
+
         if (event.mouseButton.button == sf::Mouse::Right)
         {
             if (
@@ -781,7 +705,7 @@ void draw_debug_screen(sf::RenderWindow& window)
     ss << "FPS: ";
     ss << debugScreenData.get_fps();
     ss << "\n";
-    
+
     ss << "Rendering chunks: ";
     ss << debugScreenData.getRenderChunks().first << "/" << debugScreenData.getRenderChunks().second;
     ss << "\n";
@@ -831,17 +755,17 @@ sf::Vector2f getViewSize(sf::RenderWindow& window)
 
 Game::Game()
 {
-    map = std::make_shared<Map>();
-    player = std::make_shared<Player>();
-
-    md::map = map;
-    md::player = player;
-
     if (!loadResources())
     {
         std::cout << "Game::Game -> Failed to load resources!\n";
         md::window->close();
     }
+
+    map = std::make_shared<Map>();
+    player = std::make_shared<Player>();
+
+    md::map = map;
+    md::player = player;
 }
 
 Game::~Game()
@@ -859,6 +783,19 @@ Game::~Game()
 
 bool Game::loadResources()
 {
+    auto lBackgroundGrass = ResourceManager::loadTexture("BackgroundGrass", "grass_bg.png");
+    if (lBackgroundGrass == nullptr)
+    {
+        std::cout << "Failed to load background grass texture!\n";
+        return false;
+    }
+
+    auto lPlayer = ResourceManager::loadTexture("Player", "player.png");
+    if (lBackgroundGrass == nullptr)
+    {
+        std::cout << "Failed to load player texture!\n";
+        return false;
+    }
 
     auto lDefaultNotification = ResourceManager::loadSound("DefaultNotification", "button.ogg");
     if (lDefaultNotification == nullptr)
@@ -923,7 +860,7 @@ void Game::proccessEvent(sf::Event& event)
 {
     player->event(event, *md::window, *map);
         
-    if (event.type == sf::Event::KeyPressed)
+    if (event.type == sf::Event::KeyReleased)
     {
         if (event.key.code == sf::Keyboard::F3)
         {

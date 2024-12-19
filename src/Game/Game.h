@@ -71,20 +71,6 @@ private:
 
 };
 
-extern TextureManager textureManager;
-
-class BlockInfo
-{
-    sf::RectangleShape rect;
-    BLOCK_ID block_id;
-public:
-    virtual const sf::Vector2f& get_size() const;
-
-    virtual const sf::Vector2f& get_pos() const;
-
-    virtual BLOCK_ID get_id();
-};
-
 const sf::Color get_color(BLOCK_ID id);
 
 struct Block
