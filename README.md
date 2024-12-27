@@ -3,7 +3,7 @@
 ## Libraries used
 
 ### [Json library](https://github.com/nlohmann/json)
-### [Graphics library](https://github.com/nlohmann/json) (SFML)
+### [Graphics library](https://github.com/SFML/SFML) (SFML)
 
 ## Building
 
